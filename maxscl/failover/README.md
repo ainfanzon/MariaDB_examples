@@ -31,22 +31,19 @@ TBD: need procedure here
 <ins>Start the test</ins>
 
 2 windows for Maxscale and 3 for MariaDB servers. Primary server (mdbsrv1) and 2 secondary servers (mdbsrv2, mdbsrv3).
-
-| ------- | -------- |
-| maxscl   |watch -n 1 |
-| ------- | -------- |
-+--------+--------+--------+<br>
-|mdbsrv1|mdbsrv2|mdbsrv3|<br>
-+--------+--------+--------+<br>
-
 1) On the top left corner, the MaxScale server
 2) To the right a window executing the __watch__ command every second to display the output of the MaxScale list servers command
 3) At the bottom we have three database servers. On the bottom left the master server and the other two on the right are asynchronous replicas. All three servers are executing the command line sql interface.
 
+| maxscl   | watch -n 1 |
+| ------- | -------- |
+
+| mdbsrv1 | mdbsrv2 | mdbsrv3 |
+| ------- | ------- | --------|
 
 COMMANDS:
 
-Execute the following commands on the host computer shell
+Execute the following commands on the host computer operating system shell
 
 cd DEMO_HOME<br>
 democtl.sh -s maxscl -d failover -a start 
@@ -57,29 +54,27 @@ To test replication is working properly. On the __master__ node create a databas
 
 COMMANDS:
 
-Execute the following commands on the mysql client tool.
+On all the database servers, execute the following commands on the mysql client tool. First check the IP address of the container. Then check the __trashme__ database does NOT exist. Create the __trashme__ database and validate it was created in all the replicas.
 
 system hostname -I<br>
 SHOW DATABASES;<br>
-CREATE DATABASE trashme;<br>
+Execute this command in the master __ONLY__: CREATE DATABASE trashme;<br>
 SHOW DATABASES;<br>
 
-ON THE MAXSCALE SERVER
-3) MAXSCALE CONFIGURATION AND ADMINISTRATION COMMANDS
+<ins>Review MaxScale Configuration</ins>
 
-TALKING POINTS:
-
-+ Review the configurations settings in the MaxScale 
-  Config file highlights: servers; Monitor; Service Def; listeners
+Review the configurations settings in the MaxScale configuration file. highlights: servers; Monitor; Service Def; listeners
 top screen restart maxscale
 + Show active services
+ON THE MAXSCALE SERVER
 
 COMMANDS:
- cat /etc/maxscale.cnf           
- systemctl restart maxscale
- maxctrl list services
-===============================================================================
-4) CLIENT APP:
+
+cat /etc/maxscale.cnf<br>      
+systemctl restart maxscale<br>
+maxctrl list services<br>
+ 
+ 4) CLIENT APP:
 
 TALKING POINTS:
   + Identify the primary server and maxscale server IP addresis
