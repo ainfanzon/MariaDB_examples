@@ -37,8 +37,8 @@ Some Mac Automation Scripting code is used. See [About Mac Scripting](https://de
 2) To the right a window executing the __watch__ command every second to display the output of the MaxScale list servers command
 3) At the bottom we have three database servers. On the bottom left the master server and the other two on the right are asynchronous replicas. All three servers are executing the command line sql interface.
 
-| maxscl   | watch -n 1 |
-| ------- | -------- |
+| maxscl | watch -n 1 |
+| ------ | ---------- |
 
 | mdbsrv1 | mdbsrv2 | mdbsrv3 |
 | ------- | ------- | --------|
@@ -61,8 +61,10 @@ On all the database servers, execute the following commands on the mysql client 
 system hostname -I<br>
 SHOW DATABASES;<br>
 Execute this command in the master __ONLY__:<br>
-> CREATE DATABASE trashme;<br>
-SHOW DATABASES;<br>
+> CREATE DATABASE trashme;
+
+SHOW DATABASES;
+
 
 <ins>Review MaxScale Configuration</ins>
 
@@ -91,9 +93,8 @@ secondary server is promoted to Master
   + server is now a secondary
   + it is now at the same GTID
 
-Script explanation
-
 COMMANDS:
+
  clear ; cat /mdb/maxscl/failover/loop.sh
  hostname -I
  /mdb/maxscl/failover/loop.sh
@@ -102,9 +103,10 @@ COMMANDS:
  SHUTDOWN;
 
 # Restart server
- system systemctl start mariadb
+ 
+\> system systemctl start mariadb
 
-6) CAUSAL CONSISTENCY AND TRANSACTION REPLAY
+<ins> Test Causal Consistency and Transaction Replay
 
 TALKING POINTS:
 Uncomment causal_reads and transaction_replay
