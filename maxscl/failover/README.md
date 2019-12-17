@@ -57,27 +57,24 @@ TBD: need procedure here
 
 COMMANDS:
 
+Execute the following commands on the host computer shell
+
 cd DEMO_HOME<br>
 democtl.sh -s maxscl -d failover -a start 
 
+<ins>Test Replication</ins>
 
-First step is to test replication is working properly. To do that let’s show all the databases in this installation.
-ON THE MASTER NODE
-2) SHOW REPLICATION IS WORKING
-
-TALKING POINTS:
-+ Correlate IPs to list servers output
-+ All servers have the same schemas.
-+ create a database to validate the synchronous replication is working
-+ The watch command shows the all the servers are in Synch.
+To test replication is working properly. On the __master__ node create a database to validate the synchronous replication is working. The screen executing the watch command shows all the servers are synchronized. 
 
 COMMANDS:
 
- system hostname -I
- SHOW DATABASES;
- CREATE DATABASE trashme;
- SHOW DATABASES;
-===============================================================================
+Execute the following commands on the mysql client tool.
+
+system hostname -I<br>
+SHOW DATABASES;<br>
+CREATE DATABASE trashme;<br>
+SHOW DATABASES;<br>
+
 ON THE MAXSCALE SERVER
 3) MAXSCALE CONFIGURATION AND ADMINISTRATION COMMANDS
 
