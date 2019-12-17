@@ -57,7 +57,7 @@ TBD: need procedure here
 
 COMMANDS:
 
-cd <DEMO_HOME>
+cd DEMO_HOME<br>
 democtl.sh -s maxscl -d failover -a start 
 
 
