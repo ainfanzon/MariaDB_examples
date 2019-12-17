@@ -1,0 +1,36 @@
+version: '2'
+services:
+    mdbsrv:
+        image: mdbsrv:latest
+        privileged: true
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: mdbsrv
+        container_name: mdbsrv
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.2
+        ports:
+            - "4001:3306"
+
+    python:
+        image: py:latest
+        privileged: true
+        ports:
+            - '80:80'
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.3
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: pysrv
+        container_name: pysrv
+
+networks:
+    static-network:
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16
+                  ip_range: 172.28.5.0/24
