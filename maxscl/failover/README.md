@@ -12,24 +12,15 @@ a Docker environment installed.
 
 ### Prerequisites
 
-<ins>macOS</ins>
-
-macOS Catalina: 10.15.2
-
-<ins>Docker</ins>
-
+macOS Catalina: 10.15.2<br>
 Docker Engine: 19.03.5<br>
 Docker Compose: 1.24.1<br>
 Machine: 0.16.2<br>
 [Install Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
 
-<ins>iTerm2</ins>
-
 Since you are going to be spending a lot of time in the command-line, I recommend to use iTerm2 rather than the default in macOS.
 
 To download and install iTerm2 go to: [iTerm2 Home page](https://www.iterm2.com/index.html)
-
-<ins>Mac Scripting</ins>
 
 Some Mac Automation Scripting code is used. See [About Mac Scripting](https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/index.html#//apple_ref/doc/uid/TP40016239-CH56-SW1) for in-depth details.
 
