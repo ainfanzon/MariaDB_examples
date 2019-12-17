@@ -99,9 +99,9 @@ On the MaxScale server perform the following steps:
 
 __COMMANDS:__
 
-$ clear ; cat /mdb/maxscl/failover/loop.sh
-$ hostname -I
-$ /mdb/maxscl/failover/loop.sh
+$ clear ; cat /mdb/maxscl/failover/loop.sh<br>
+$ hostname -I<br>
+$ /mdb/maxscl/failover/loop.sh<br>
 
 > Select the database server that match the IP address and server name from step one above. Then execute the following 
 command no that database server.
