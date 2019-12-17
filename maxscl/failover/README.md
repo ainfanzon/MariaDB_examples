@@ -8,17 +8,16 @@
 
 ## Description
 
-MariaDB __MaxScale__ is an advanced database proxy for MariaDB database servers. Failover for the master-replica cluster can
-be set to activate automatically. MaxScale monitors the database servers, so it will quickly notice any changes in server
-status or replication topology.
+MariaDB MaxScale is an advanced database proxy. Failover for the master-replica cluster can be set to activate automatically. 
+MaxScale monitors the database servers, so it will quickly notice any changes in server status or replication topology.
 
 The script below demonstrates how automatic failover is configured and how it works.
 
 ## Getting Started 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing. 
-This project was built on a MacOS environment using Docker. It will run on Linux or Windows environment so long as you have
-a Docker environment installed.
+This project was built on a MacOS environment using Docker. It can run on Linux or Windows environments so long as you have
+a Docker environment installed (some changes and addtional tool, e.g., cygwin, might need to be installed).
 
 ### Prerequisites
 
@@ -34,17 +33,16 @@ Some Mac automation scripting code is used. See [About Mac Scripting](https://de
 
 ### Installation
 
-Need procedure
+Need to insert procedure here
 
 ### Executing the test
 
 <ins>Start the test</ins>
 
-Create two windows for MaxScale and three for MariaDB servers. One primary server (mdbsrv1) and two secondary servers
-(mdbsrv2, mdbsrv3).<br>
-1) On the top left corner, the MaxScale server.
+The script creates two windows for MaxScale and three for MariaDB servers. One for the primary server (mdbsrv1) and two for the secondary servers(mdbsrv2, mdbsrv3).<br>
+1) Place the MaxScale server window on the top left corner.
 2) To the right a window executing the __watch__ command every second to display the output of the MaxScale list servers command.
-3) At the bottom we have three database servers. On the bottom left the master server and the other two on the right are asynchronous replicas. All three servers are executing the command line sql interface.
+3) At the bottom place all three database servers. On the bottom left the master server and the other two on the right are asynchronous replicas. All three servers are executing the mysql command line sql interface.
 
 | maxscl | watch -n 1 |
 | ------ | ---------- |
@@ -56,8 +54,8 @@ __COMMANDS:__
 
 Execute the following commands on the host computer operating system shell. DEMO_HOME is the directory where the this example was installed.
 
-cd DEMO_HOME<br>
-democtl.sh -s maxscl -d failover -a start 
+\% cd DEMO_HOME<br>
+\% democtl.sh -s maxscl -d failover -a start 
 
 <ins>Test Replication</ins>
 
@@ -67,35 +65,35 @@ __COMMANDS:__
 
 On all the database servers, execute the following commands on the mysql client tool. First check the IP address of the container. Then check the __trashme__ database does NOT exist. Create the __trashme__ database and validate it was created in all the replicas.
 
-system hostname -I<br>
-SHOW DATABASES;<br>
+\> system hostname -I<br>
+\> SHOW DATABASES;<br>
 Execute this command in the master __ONLY__:<br>
-> CREATE DATABASE trashme;
+> \> CREATE DATABASE trashme;
 
-SHOW DATABASES;
+\> SHOW DATABASES;
 
+Replication is working properly if the __trashme__ database was created in all the replicas.
 
 <ins>Review MaxScale Configuration</ins>
 
-Review the configuration settings in the MaxScale configuration file (maxscale.cnf). In the server section, check server IP address, ; Monitor; Service Def; listeners
-top screen restart maxscale
+Review the configuration settings in the MaxScale configuration file (maxscale.cnf). In the server section, check server IP addresses, review the database monitor, service definition and listeners sections. Then restart MaxScale.
 
 __COMMANDS:__
 
-cat /etc/maxscale.cnf<br>      
-systemctl restart maxscale<br>
-maxctrl list services<br>
+\$ cat /etc/maxscale.cnf<br>      
+\$ systemctl restart maxscale<br>
+\$ maxctrl list services<br>
  
 <ins>Test Automatic Failover</ins>
 
 On the MaxScale server perform the following steps:
 
-* In the watch command output, identify the primary server (top right command line window).
-* Identify the master server.
+* In the window running the watch command, identify the primary server.
+* Identify the master server name and IP address.
 * Review the __loop.sh__ script.
->> The first attribute in the select indicates where the read came from
->> NOTE: Due to the asynchronous replication an insert might not have been replicated, thus the not found message
-* Validate the IP address in the script matches the IP of the MaxScale server (maxscl)
+>> The first attribute in the select statement indicates where the read came from.
+>> NOTE: Due to the asynchronous replication an insert might not have been replicated, thus the not found message would be displayed in red.
+* Validate the IP address in the script matches the IP address of the MaxScale server (maxscl)
 
 __COMMANDS:__
 
@@ -128,4 +126,4 @@ $ systemctl restart maxscale<br>
 $ clear ; /mdb/maxscl/failover/loop.sh<br>
 
 > Shutdown the master database server<br>
- SHUTDOWN;
+\> SHUTDOWN;
