@@ -1,8 +1,18 @@
 # MariaDB MaxScale Master/Replicas Failover Example
 
+# To Do List
+
+- [ ] Add installation procedure in the installation section below
+- [ ] Test installation instructions are working
+- [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one
+
+# Description
+
 MariaDB __MaxScale__ is an advanced database proxy for MariaDB database servers. Failover for the master-replica cluster can
 be set to activate automatically. MaxScale monitors the database servers, so it will quickly notice any changes in server
 status or replication topology.
+
+The script below demonstrates how automatic failover is configured and how it works.
 
 ## Getting Started 
 
@@ -22,11 +32,9 @@ Most of the commands are executed from the command-line. iTerm2 provides an easy
 
 Some Mac Automation Scripting code is used. See [About Mac Scripting](https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/index.html#//apple_ref/doc/uid/TP40016239-CH56-SW1) for in-depth details.
 
-### Installing 
+### Installation
 
-- [ ] Add installation procedure in this section
-- [ ] Test installation is working
-- [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one
+Need procedure
 
 ### Executing the test
 
@@ -84,38 +92,39 @@ On the MaxScale server perform the following steps:
 * In the watch command output, identify the primary server (top right command line window).
 * Identify the master server.
 * Review the __loop.sh__ script.
-> The first attribute in the select indicates where the read came from
-> NOTE: Due to the asynchronous replication an insert might not have been replicated, thus the not found message
+>> The first attribute in the select indicates where the read came from
+>> NOTE: Due to the asynchronous replication an insert might not have been replicated, thus the not found message
 * Validate the IP address in the script matches the IP of the MaxScale server (maxscl)
 
-secondary server is promoted to Master
-  + the connection fails and cannot recover
-  + server is now a secondary
-  + it is now at the same GTID
+__COMMANDS:__
 
-COMMANDS:
+$ clear ; cat /mdb/maxscl/failover/loop.sh
+$ hostname -I
+$ /mdb/maxscl/failover/loop.sh
 
- clear ; cat /mdb/maxscl/failover/loop.sh
- hostname -I
- /mdb/maxscl/failover/loop.sh
+> Execute the following command on primary MariaDB server
+ 
+$ SHUTDOWN;
 
-# On the MariaDB Primary server
- SHUTDOWN;
-
-# Restart server
+> Restart server
  
 \> system systemctl start mariadb
 
 <ins> Test Causal Consistency and Transaction Replay
 
-TALKING POINTS:
-Uncomment causal_reads and transaction_replay
+Edit the MaxScale configuration file and uncomment __causal_reads__ and __transaction_replay__. Restart MaxScale for the
+changes to take effect.
 
-COMMANDS:
- vi /etc/maxscale.cnf
- systemctl restart maxscale
+Identify the new master and re-execute the script to see how the application continues to work even though the master 
+server is down.
 
-# Identify the new master and re-execute the loop script
+__COMMANDS:__
 
- clear ; /mdb/maxscl/failover/loop.sh
+> Execute the following commands on the MaxScale server
+
+$ vi /etc/maxscale.cnf<br>
+$ systemctl restart maxscale<br>
+$ clear ; /mdb/maxscl/failover/loop.sh<br>
+
+> Shutdown the master database server<br>
  SHUTDOWN;
