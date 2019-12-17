@@ -1,0 +1,45 @@
+#**********************************************************************
+# Project	: MariaDB features demo client tools
+# Program name	: Dockerfile.python
+# Author	: Alex Infanxon
+# Date created	: 20190816
+# Purpose	: Docker image with python and mysql installed for client
+#		  demonstration tools
+#
+# Synopsis:
+#   docker build --rm -t py - < Dockerfile.python 
+#
+# Revision History:
+#
+# Date        Author      Ref    Revision (Date in YYYYMMDD format) 
+# 20100818    AI          1      Original version
+#
+#**********************************************************************
+
+FROM centos:7
+
+MAINTAINER Alex Infanzon (ai@mariadb.com)
+
+ENV container docker
+
+RUN yum -y update ; yum clean all
+RUN yum install -y epel-release && \
+    yum install -y git gcc make zlib-devel bzip2 bzip2-devel readline-devel sqllite sqlite-devel openssl-devel xz xz-devel libffi-devel && \
+    yum install -y python-pip && \
+    yum install -y mysql && \
+    yum clean all
+
+ENV PROJ=pyenv-installer
+ENV SCRIPT_URL=https://github.com/pyenv/$PROJ/raw/master/bin/$PROJ
+RUN curl -L $SCRIPT_URL | bash
+
+ENV PYENV_ROOT=/root/.pyenv
+ENV PATH=$PATH:/root/.pyenv/bin
+
+RUN eval "$(/root/.pyenv/bin/pyenv init -)" && \
+    eval "$(/root/.pyenv/bin/pyenv virtualenv-init  -)" && \
+    pyenv install 3.7.0 && \
+    pyenv global 3.7.0 && \
+    pip install --upgrade pip
+
+CMD ["/usr/sbin/init"]
