@@ -32,9 +32,9 @@ TBD: need procedure here
 
 2 windows for Maxscale and 3 for MariaDB servers. Primary server (mdbsrv1) and 2 secondary servers (mdbsrv2, mdbsrv3).
 
-+---------+----------+<br>
-|maxscl   |watch -n 1|<br>
-+---------+----------+<br>
+|---------|----------|
+|maxscl   |watch -n 1|
+|---------|----------|
 +--------+--------+--------+<br>
 |mdbsrv1|mdbsrv2|mdbsrv3|<br>
 +--------+--------+--------+<br>
