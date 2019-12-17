@@ -1,12 +1,12 @@
 # MariaDB MaxScale Master/Replicas Failover Example
 
-# To Do List
+## To Do List
 
-- [ ] Add installation procedure in the installation section below
-- [ ] Test installation instructions are working
-- [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one
+- [ ] Add installation procedure in the installation section below.
+- [ ] Test installation instructions are working.
+- [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one.
 
-# Description
+## Description
 
 MariaDB __MaxScale__ is an advanced database proxy for MariaDB database servers. Failover for the master-replica cluster can
 be set to activate automatically. MaxScale monitors the database servers, so it will quickly notice any changes in server
@@ -16,8 +16,8 @@ The script below demonstrates how automatic failover is configured and how it wo
 
 ## Getting Started 
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-This project was built on a MacOS environment using Docker. I will run on Linux or Windows environment so long as you have
+These instructions will get you a copy of the project up and running on your local machine for development and testing. 
+This project was built on a MacOS environment using Docker. It will run on Linux or Windows environment so long as you have
 a Docker environment installed.
 
 ### Prerequisites
@@ -28,9 +28,9 @@ Docker Compose: 1.24.1<br>
 Docker Machine: 0.16.2<br>
 Documentation on how to [Install Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
 
-Most of the commands are executed from the command-line. iTerm2 provides an easy to use interface on macOS. To download iTerm 2 and get the installation steps go to: [iTerm2 Home page](https://www.iterm2.com/index.html)
+Most of the commands are executed from the command-line. iTerm2 provides an easy to use interface on macOS. To download iTerm2 and instructions for installation steps go to: [iTerm2 Home page](https://www.iterm2.com/index.html)
 
-Some Mac Automation Scripting code is used. See [About Mac Scripting](https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/index.html#//apple_ref/doc/uid/TP40016239-CH56-SW1) for in-depth details.
+Some Mac automation scripting code is used. See [About Mac Scripting](https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/index.html#//apple_ref/doc/uid/TP40016239-CH56-SW1) for in-depth details.
 
 ### Installation
 
@@ -40,9 +40,10 @@ Need procedure
 
 <ins>Start the test</ins>
 
-2 windows for Maxscale and 3 for MariaDB servers. Primary server (mdbsrv1) and 2 secondary servers (mdbsrv2, mdbsrv3).
-1) On the top left corner, the MaxScale server
-2) To the right a window executing the __watch__ command every second to display the output of the MaxScale list servers command
+Create two windows for MaxScale and three for MariaDB servers. One primary server (mdbsrv1) and two secondary servers
+(mdbsrv2, mdbsrv3).<br>
+1) On the top left corner, the MaxScale server.
+2) To the right a window executing the __watch__ command every second to display the output of the MaxScale list servers command.
 3) At the bottom we have three database servers. On the bottom left the master server and the other two on the right are asynchronous replicas. All three servers are executing the command line sql interface.
 
 | maxscl | watch -n 1 |
