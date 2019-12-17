@@ -1,10 +1,11 @@
-# MariaDB MaxScale Master/Replicas Failover Example
+# MaxScale Master/Replicas Automatic Failover Example
 
 ## To Do List
 
 - [ ] Add installation procedure in the installation section below.
 - [ ] Test installation instructions are working.
 - [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one.
+- [ ] How to install this scripts from Github?
 
 ## Description
 
