@@ -43,14 +43,14 @@ TBD: need procedure here
 
 COMMANDS:
 
-Execute the following commands on the host computer operating system shell
+Execute the following commands on the host computer operating system shell. DEMO_HOME is the directory where the this example was installed.
 
 cd DEMO_HOME<br>
 democtl.sh -s maxscl -d failover -a start 
 
 <ins>Test Replication</ins>
 
-To test replication is working properly. On the __master__ node create a database to validate the synchronous replication is working. The screen executing the watch command shows all the servers are synchronized. 
+To test replication is working properly. On the __master__ node create a database to validate replication is working. The screen executing the watch command shows all the servers are synchronized. 
 
 COMMANDS:
 
