@@ -24,7 +24,9 @@ Some Mac Automation Scripting code is used. See [About Mac Scripting](https://de
 
 ### Installing 
 
-TBD: need procedure here
+- [ ] Add installation procedure in this section
+- [ ] Test installation is working
+- [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one
 
 ### Executing the test
 
@@ -41,7 +43,7 @@ TBD: need procedure here
 | mdbsrv1 | mdbsrv2 | mdbsrv3 |
 | ------- | ------- | --------|
 
-COMMANDS:
+__COMMANDS:__
 
 Execute the following commands on the host computer operating system shell. DEMO_HOME is the directory where the this example was installed.
 
@@ -52,35 +54,39 @@ democtl.sh -s maxscl -d failover -a start
 
 To test replication is working properly. On the __master__ node create a database to validate replication is working. The screen executing the watch command shows all the servers are synchronized. 
 
-COMMANDS:
+__COMMANDS:__
 
 On all the database servers, execute the following commands on the mysql client tool. First check the IP address of the container. Then check the __trashme__ database does NOT exist. Create the __trashme__ database and validate it was created in all the replicas.
 
 system hostname -I<br>
 SHOW DATABASES;<br>
-Execute this command in the master __ONLY__: CREATE DATABASE trashme;<br>
+Execute this command in the master __ONLY__:<br>
+> CREATE DATABASE trashme;<br>
 SHOW DATABASES;<br>
 
 <ins>Review MaxScale Configuration</ins>
 
-Review the configurations settings in the MaxScale configuration file. highlights: servers; Monitor; Service Def; listeners
+Review the configuration settings in the MaxScale configuration file (maxscale.cnf). In the server section, check server IP address, ; Monitor; Service Def; listeners
 top screen restart maxscale
-+ Show active services
-ON THE MAXSCALE SERVER
 
-COMMANDS:
+__COMMANDS:__
 
 cat /etc/maxscale.cnf<br>      
 systemctl restart maxscale<br>
 maxctrl list services<br>
  
- 4) CLIENT APP:
+<ins>Test Automatic Failover</ins>
 
-TALKING POINTS:
-  + Identify the primary server and maxscale server IP addresis
-  + read-write-split - first field indicates where the read came from; 
-  + Due to async replication an insert might not have been replicated thus the not found message
-  + secondary server is promoted to Master
+On the MaxScale server perform the following steps:
+
+* In the watch command output, identify the primary server (top right command line window).
+* Identify the master server.
+* Review the __loop.sh__ script.
+> The first attribute in the select indicates where the read came from
+> NOTE: Due to the asynchronous replication an insert might not have been replicated, thus the not found message
+* Validate the IP address in the script matches the IP of the MaxScale server (maxscl)
+
+secondary server is promoted to Master
   + the connection fails and cannot recover
   + server is now a secondary
   + it is now at the same GTID
@@ -97,7 +103,7 @@ COMMANDS:
 
 # Restart server
  system systemctl start mariadb
-===============================================================================
+
 6) CAUSAL CONSISTENCY AND TRANSACTION REPLAY
 
 TALKING POINTS:
@@ -111,4 +117,3 @@ COMMANDS:
 
  clear ; /mdb/maxscl/failover/loop.sh
  SHUTDOWN;
-===============================================================================
