@@ -5,7 +5,7 @@
 - [ ] Add installation procedure in the installation section below.
 - [ ] Test installation instructions are working.
 - [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one.
-- [ ] How to install this scripts from Github?
+- [ ] How to download and install this project from Github?
 
 ## Description
 
@@ -36,14 +36,14 @@ Some Mac automation scripting code is used. See [About Mac Scripting](https://de
 
 Need to insert procedure here
 
-### Executing the test
+### Executing the Test
 
-<ins>Start the test</ins>
+<ins>Start the Test</ins>
 
-The script creates two windows for MaxScale and three for MariaDB servers. One for the primary server (mdbsrv1) and two for the secondary servers(mdbsrv2, mdbsrv3).<br>
-1) Place the MaxScale server window on the top left corner.
-2) To the right a window executing the __watch__ command every second to display the output of the MaxScale list servers command.
-3) At the bottom place all three database servers. On the bottom left the master server and the other two on the right are asynchronous replicas. All three servers are executing the mysql command line sql interface.
+The script creates two windows for MaxScale and three for the database servers. One for the primary  (mdbsrv1) and two replicas (mdbsrv2, mdbsrv3).<br>
+1) Place the MaxScale server window in the top left corner.
+2) Place the window executing the __watch__ command to the right. The watch command is executed every second and displays the output of the MaxScale __maxctrl list servers__ command.
+3) At the bottom place all three database servers. On the left the master server and the asynchronous replicas on the right. All three servers are executing the __mysql__ command line sql interface.
 
 | maxscl | watch -n 1 |
 | ------ | ---------- |
@@ -60,7 +60,7 @@ Execute the following commands on the host computer operating system shell. DEMO
 
 <ins>Test Replication</ins>
 
-To test replication is working properly. On the __master__ node create a database to validate replication is working. The screen executing the watch command shows all the servers are synchronized. 
+To test replication is working properly. On the __master__ node create a database to validate replication is working. The screen executing the watch command shows all GTIDs are synchronized after exexuting the first transaction. 
 
 __COMMANDS:__
 
