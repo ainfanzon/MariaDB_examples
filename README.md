@@ -6,6 +6,10 @@
 - [ ] Test installation instructions are working.
 - [ ] Set the scripts to use the install directory instead of the /mdb hardcoded one.
 - [ ] How to download and install this project from Github?
+- [ ] Create directory for Galera automatic failover example.
+- [ ] Create directory for MaxScale Sharding example.
+- [ ] Create directory for Spider example.
+- [ ] Create directory for PL/SQL emulation in MariaDB example.
 
 ## Description
 
