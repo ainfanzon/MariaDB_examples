@@ -65,7 +65,9 @@ To test replication is working properly. On the __master__ node create a databas
 
 __COMMANDS:__
 
-On all the database servers, execute the following commands on the __mysql__ client tool. First check the IP address of the container. Then check the __trashme__ database does NOT exist. Create the __trashme__ database and validate it was created in all the replicas.
+On all the database servers, execute the following commands from the __mysql__ client tool. First check the IP address of the 
+docker container. Then check the __trashme__ database does NOT exist. Create the __trashme__ database in the master database
+and validate it was created in all the replicas.
 
 \> system hostname -I<br>
 \> SHOW DATABASES;<br>
@@ -104,7 +106,7 @@ $ hostname -I<br>
 $ /mdb/maxscl/failover/loop.sh<br>
 
 > Select the database server that match the IP address and server name from step one above. Then execute the following 
-command no that database server.
+command on that database server.
  
 $ SHUTDOWN;
 
@@ -114,11 +116,10 @@ $ SHUTDOWN;
 
 <ins> Test Causal Consistency and Transaction Replay
 
-Edit the MaxScale configuration file and uncomment __causal_reads__ and __transaction_replay__. Restart MaxScale for the
+Edit the MaxScale configuration file. Uncomment __causal_reads__ and __transaction_replay__. Restart MaxScale for the
 changes to take effect.
 
-Identify the new master and re-execute the script to see how the application continues to work even though the master 
-server is down.
+Identify the new master and re-execute the script.  The application continues to work even though the master server is down.
 
 __COMMANDS:__
 
