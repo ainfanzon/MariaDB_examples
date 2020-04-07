@@ -4,7 +4,9 @@
 
 In the installation directory execute the democtl script
 
+```ksh
 ./democtl -s mdbtx -d spider_ha -a [ start | stop ]
+```
 
 ## Step 2) Testing Layout
 
