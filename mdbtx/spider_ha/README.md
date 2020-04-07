@@ -6,11 +6,9 @@ In the installation directory execute the democtl script
 
 ./democtl -s mdbtx -d spider_ha -a [ start | stop ]
 
+## 2) LAYOUT SETUP: Open 2 windows for Maxscale and 3 for MariaDB servers.
 
-===============================================================================
-2) LAYOUT SETUP: Open 2 windows for Maxscale and 3 for MariaDB servers.
-
-![Image of Yaktocat](https://github.com/ainfanzon/MariaDB_examples/edit/master/mdbtx/spider_ha/Topology.jpg)
+![Topology](https://github.com/ainfanzon/MariaDB_examples/blob/master/mdbtx/spider_ha/Topology.jpg)
 
 
 ===============================================================================
