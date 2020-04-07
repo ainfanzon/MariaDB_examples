@@ -10,11 +10,8 @@ In the installation directory execute the democtl script
 ===============================================================================
 2) LAYOUT SETUP: Open 2 windows for Maxscale and 3 for MariaDB servers.
 
-+-----------------------+
-|    spider head node   |
-+-------+-------+-------+
-| node1 | node2 | node3 |
-+-------+-------+-------+
+![Image of Yaktocat](https://github.com/ainfanzon/MariaDB_examples/edit/master/mdbtx/spider_ha/Topology.jpg)
+
 
 ===============================================================================
 3) Enable the Spider storage engine
