@@ -1,0 +1,82 @@
+version: '2'
+services:
+    server1:
+        image: mdbsrv:latest
+        privileged: true
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: mdbsrv1
+        container_name: mdbsrv1
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.2
+        ports:
+            - "4001:3306"
+
+    server2:
+        image: mdbsrv:latest
+        privileged: true
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: mdbsrv2
+        container_name: mdbsrv2
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.3
+        ports:
+            - "4002:3306"
+
+    maxscale:
+        image: mdbmxscl:latest
+        privileged: true
+        depends_on:
+            - server1
+            - server2
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: mdbmxscl
+        container_name: mdbmxscl
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.4
+        ports:
+            - "4006:4006"  # readwrite port
+            - "4008:4008"  # readonly port
+            - "8989:8989"  # REST API port
+
+    client1:
+        image: py:latest
+        privileged: true
+        ports:
+            - '8080:8080'
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.5
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: client1
+        container_name: client1
+
+    client2:
+        image: py:latest
+        privileged: true
+        ports:
+            - '8081:8081'
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.6
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: client2
+        container_name: client2
+
+networks:
+    static-network:
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16
+                  ip_range: 172.28.5.0/24
