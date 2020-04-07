@@ -1,10 +1,12 @@
 # Spider Test with High Availability
 
-## Step 1) Start containers docker containers using the democtl script located in the MariaDB_examples folder.
+## Step 1) Start the docker containers using the democtl script located in the MariaDB_examples folder.
 
 In the installation directory execute the democtl script
 
 ./democtl -s mdbtx -d spider_ha -a [ start | stop ]
+
+
 ===============================================================================
 2) LAYOUT SETUP: Open 2 windows for Maxscale and 3 for MariaDB servers.
 
