@@ -10,6 +10,7 @@
 - [ ] Create directory for MaxScale Sharding example.
 - [ ] Create directory for Spider example.
 - [ ] Create directory for PL/SQL emulation in MariaDB example.
+- [ ] Replace Apple Sripts with Python scripts for iTerm2
 
 ## Description
 
