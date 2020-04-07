@@ -6,29 +6,21 @@ In the installation directory execute the democtl script
 
 ./democtl -s mdbtx -d spider_ha -a [ start | stop ]
 
-## 2) LAYOUT SETUP: Open 2 windows for Maxscale and 3 for MariaDB servers.
+## Step 2) Testing Layout
 
-![Topology](https://github.com/ainfanzon/MariaDB_examples/blob/master/mdbtx/spider_ha/Topology.jpg)
+Use the following layout to for the test.
 
+![Layout](https://github.com/ainfanzon/MariaDB_examples/blob/master/mdbtx/spider_ha/Topology.jpg)
 
-===============================================================================
-3) Enable the Spider storage engine
+## Step 3) Enable the Spider storage engine
 
-Talking points
-  + easy install. One step
+Installing the spider storage engine is simple. Type the following command in the Spider node, in this case mdbsrv1.
+Use the mariadb (mysql) command line interface.
 
-COMMANDS
-========
-
-# On the spider server execute
-
- SHOW ENGINES;
-
- \! clear
- SOURCE /usr/share/mysql/install_spider.sql;
- SHOW ENGINES;
-
-===============================================================================
+```
+SOURCE /usr/share/mysql/install_spider.sql;
+SHOW ENGINES;
+```
 4) Create server entries on spider server
 
 COMMANDS
