@@ -35,21 +35,22 @@ At launch time the __spider_head.sql__ is executed. The script:
 To verify the servers were created. Execute the following command in the __mariadb__ command line client:
 
 ```SQL
- \! clear
- SELECT Server_name, Host, Db, Port FROM mysql.servers\G
- ```
+\! clear
+SELECT Server_name, Host, Db, Port FROM mysql.servers\G
+```
 
-## Step 5) Verify the spider user can connect from the head node to the backend nodes
+## Step 5) Spider user connectivity
 
-COMMANDS
+Verify the spider user can connect from the head node to ALL the backend nodes. From the Spider NODE execute:
 
- On the HEAD NODE
+```SQL
+\! clear
+system  mysql -u sp_user -pletmein -h 172.20.0.2 -e 'SELECT @@hostname'
+system  mysql -u sp_user -pletmein -h 172.20.0.3 -e 'SELECT @@hostname'
+system  mysql -u sp_user -pletmein -h 172.20.0.4 -e 'SELECT @@hostname'
+system  mysql -u sp_user -pletmein -h 172.20.0.5 -e 'SELECT @@hostname'
+```
 
- \! clear
- system  mysql -u sp_user -pletmein -h 172.20.0.2 -e 'SELECT @@hostname'
- system  mysql -u sp_user -pletmein -h 172.20.0.3 -e 'SELECT @@hostname'
- system  mysql -u sp_user -pletmein -h 172.20.0.4 -e 'SELECT @@hostname'
- system  mysql -u sp_user -pletmein -h 172.20.0.5 -e 'SELECT @@hostname'
 
 ## Step 6) Check the backend tables were created
 
