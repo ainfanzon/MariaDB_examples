@@ -13,7 +13,7 @@
 
 ## Description
 
-Collection of Docker environments to test MariaDB servers and tools
+Collection of Docker environments to test MariaDB solutions and tools
 
 ## Getting Started 
 
