@@ -1,0 +1,74 @@
+version: '2'
+services:
+    spider:
+        image: mdbsrv:latest
+        privileged: true
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: spider
+        container_name: spider
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.2
+        ports:
+            - "4001:3306"
+
+    shard1:
+        image: mdbsrv:latest
+        privileged: true
+        depends_on:
+            - spider
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: node1 
+        container_name: node1
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.3
+        ports:
+            - "4002:3306"
+
+    shard2:
+        image: mdbsrv:latest
+        privileged: true
+        depends_on:
+            - spider
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: node2
+        container_name: node2
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.4
+        ports:
+            - "4003:3306"
+
+    shard3:
+        image: mdbsrv:latest
+        privileged: true
+        depends_on:
+            - spider
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'Y'
+        volumes:
+            - /Users/Shared:/mdb
+        hostname: node3
+        container_name: node3
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.5
+        ports:
+            - "4004:3306"
+
+networks:
+    static-network:
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16
+                  ip_range: 172.28.5.0/24

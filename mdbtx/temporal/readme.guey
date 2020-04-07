@@ -1,0 +1,10 @@
+1) Setup demo
+
+
+2) Purchase Orders Use Case
+
+To create and populate the purchaseOrderLines table run the following script from the mysql client
+
+MariaDB [test]> SOURCE /mdb/mdbtx/temporal/purchaseOrderLines.sch;
+
+

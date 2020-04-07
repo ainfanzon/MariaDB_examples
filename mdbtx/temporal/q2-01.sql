@@ -1,0 +1,4 @@
+ALTER TABLE purchaseOrderLines
+    ADD COLUMN start_trxid bigint UNSIGNED GENERATED ALWAYS AS ROW START
+  , ADD COLUMN end_trxid bigint UNSIGNED GENERATED ALWAYS AS ROW END
+  , ADD PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid);

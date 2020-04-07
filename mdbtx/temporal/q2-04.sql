@@ -1,0 +1,11 @@
+UPDATE concertEvents SET tksSold = FLOOR( 1 + RAND( ) * 20) WHERE eventID = 1;
+SELECT SLEEP(3);
+UPDATE concertEvents SET tksSold = FLOOR( 1 + RAND( ) * 20) WHERE eventID = 1;
+SELECT SLEEP(3);
+UPDATE concertEvents SET tksSold = FLOOR( 1 + RAND( ) * 20) WHERE eventID = 1;
+SELECT SLEEP(3);
+UPDATE concertEvents SET tksSold = FLOOR( 1 + RAND( ) * 20) WHERE eventID = 1;
+SELECT SLEEP(3);
+UPDATE concertEvents SET tksSold = FLOOR( 1 + RAND( ) * 20) WHERE eventID = 1;
+SELECT SLEEP(3);
+UPDATE concertEvents SET tksSold = FLOOR( 1 + RAND( ) * 20) WHERE eventID = 1;
