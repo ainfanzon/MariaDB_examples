@@ -19,30 +19,31 @@ Use the following layout to for the test.
 Installing the spider storage engine is simple. Type the following command in the Spider node, in this case mdbsrv1.
 Use the mariadb (mysql) command line interface.
 
-```
+```SQL
 SOURCE /usr/share/mysql/install_spider.sql;
 SHOW ENGINES;
 ```
-4) Create server entries on spider server
+## Step 4) Create the spider servers
 
-COMMANDS
-========
-# ON HEAD NODE
+At launch time the __spider_head.sql__ is executed. The script:
+  
+* Creates the __backend__ database
+* Creates the spider users sp_user and spider
+* Grants privileges to sp_user and spider
+* Creates the servers used by spider
 
- \! clear
- system cat /mdb/mdbtx/spider_ha/spider_head.sql
+To verify the servers were created. Execute the following command in the __mariadb__ command line client:
 
-# ON ALL (HEAD AND NODE) SPIDER SERVERS
-
+```SQL
  \! clear
  SELECT Server_name, Host, Db, Port FROM mysql.servers\G
+ ```
 
-===============================================================================
-5) Verify the spider user can connect from the head node to the backend nodes
+## Step 5) Verify the spider user can connect from the head node to the backend nodes
 
 COMMANDS
-========
-# On the HEAD NODE
+
+ On the HEAD NODE
 
  \! clear
  system  mysql -u sp_user -pletmein -h 172.20.0.2 -e 'SELECT @@hostname'
@@ -50,20 +51,18 @@ COMMANDS
  system  mysql -u sp_user -pletmein -h 172.20.0.4 -e 'SELECT @@hostname'
  system  mysql -u sp_user -pletmein -h 172.20.0.5 -e 'SELECT @@hostname'
 
-===============================================================================
-6) Check the backend tables were created
+## Step 6) Check the backend tables were created
 
 COMMANDS
-========
 
-# ON ALL SPIDER NODES
+
+ON ALL SPIDER NODES
 
  \! clear
  SHOW TABLES FROM backend;
  SHOW TABLES FROM backend_rpl;
  SHOW CREATE TABLE sbtest\G
 
-===============================================================================
 7) Use case 1: Sharding without HA
 
 COMMANDS
