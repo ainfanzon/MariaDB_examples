@@ -34,6 +34,6 @@ Most of the commands are executed from the command-line. iTerm2 provides an easy
 
 Some Mac automation scripting code is used. See [About Mac Scripting](https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/index.html#//apple_ref/doc/uid/TP40016239-CH56-SW1) for in-depth details.
 
-### Installation
+## Installation
 
-Need to insert procedure here
+Once you downloaded the project you need to build the docker images. Run the following commands in the Dockerfiles directory
