@@ -41,7 +41,7 @@ SELECT Server_name, Host, Db, Port FROM mysql.servers\G
 
 ## Step 5) Spider user connectivity
 
-Verify the spider user can connect from the head node to ALL the backend nodes. From the Spider NODE execute:
+Verify the spider user can connect from the spider node to ALL the backend nodes. In the Spider NODE window execute:
 
 ```SQL
 \! clear
@@ -51,27 +51,21 @@ system  mysql -u sp_user -pletmein -h 172.20.0.4 -e 'SELECT @@hostname'
 system  mysql -u sp_user -pletmein -h 172.20.0.5 -e 'SELECT @@hostname'
 ```
 
+## Step 6) Backend tables
 
-## Step 6) Check the backend tables were created
+After executing the __spider_node.sql__, the backend tables should have been created on each one of the backend servers.  You can check by executing the following SQL statements on each backend node.
 
-COMMANDS
+```SQL
+SHOW TABLES FROM backend;
+SHOW TABLES FROM backend_rpl;
+SHOW CREATE TABLE sbtest\G
+```
 
+## Step 7) Use case 1: Sharding test without HA
 
-ON ALL SPIDER NODES
+The goal is to demonstrate what happens when querying a sharded table and high availability is not enabled. 
 
- \! clear
- SHOW TABLES FROM backend;
- SHOW TABLES FROM backend_rpl;
- SHOW CREATE TABLE sbtest\G
-
-7) Use case 1: Sharding without HA
-
-COMMANDS
-========
-
-# ON THE SPIDER HEAD NODE: 
-
- \! clear
+\! clear
  system cat /mdb/mdbtx/spider_ha/cr_sharding_no_ha.sql
 
 # SHOW THE CURRENT VALUES
