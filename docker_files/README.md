@@ -28,3 +28,6 @@ If you want to test the image you can launch the container manually you can exec
 
 $ docker run --privileged --name mdbsrv1 --hostname mdbsrv1  -it -d mdbsrv:latest
 
+To execute the container run:
+
+$ docker exec -it mdbsrv1 bash
