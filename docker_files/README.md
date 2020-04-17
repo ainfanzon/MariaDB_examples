@@ -15,7 +15,7 @@ To build the images you need to change directories to the in you Docker registry
 
 1. For Columnstore - __$ docker build --rm -t mdbax4 - < Dockerfile.mcs__
 2. For MaxScale - __$ docker build --rm -t mdbmxscl - < Dockerfile.mxscl__	
-3. For the Python client - __$ docker build --rm -t - < Dockerfile.python__
+3. For the Python client - __$ docker build --rm -t py - < Dockerfile.python__
 4. For the MariaDB server - __$ docker build --rm -t mdbsrv - < Dockerfile.srv__
 
 To validate the images were created run:
