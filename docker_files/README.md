@@ -11,7 +11,7 @@ Below is a brief description of the docker files in this directory
 
 ## Build a Image
 
-To build the images you need to change directories to the in you Docker registry run the following commands: 
+To build the images you need to change to the <INSTALL DIR>/docker_files directory. The run the following __docker build__ commands to create the images in your Docker registry.
 
 1. For Columnstore - __$ docker build --rm -t mdbax4 - < Dockerfile.mcs__
 2. For MaxScale - __$ docker build --rm -t mdbmxscl - < Dockerfile.mxscl__	
