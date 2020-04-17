@@ -24,7 +24,7 @@ __$ docker images__
 
 ## Launch a container
 
-If you want to test the image you can launch the container manually with the followin commands
+If you want to test the image you can launch the container manually you can execute a run command in Docker. For example:
 
-$ docker run --privileged --name <container name> --hostname <container name>  -it -d <image name above>:latest
+$ docker run --privileged --name mdbsrv1 --hostname mdbsrv1  -it -d mdbsrv:latest
 
