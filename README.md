@@ -14,7 +14,7 @@
 
 ## Description
 
-Collection of Docker environments to test MariaDB solutions and tools
+These is a collection of Docker environments to test MariaDB solutions and tools.
 
 ## Getting Started 
 
@@ -24,11 +24,14 @@ a Docker environment installed (some changes and addtional tool, e.g., cygwin on
 
 ### Prerequisites
 
-macOS Catalina: 10.15.2<br>
-Docker Engine: 19.03.5<br>
-Docker Compose: 1.24.1<br>
-Docker Machine: 0.16.2<br>
-Documentation on how to [Install Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
+This project was originally created in the following environment. 
+
+> macOS Catalina: 10.15.2<br>
+> Docker Engine: 19.03.5<br>
+>Docker Compose: 1.24.1<br>
+>Docker Machine: 0.16.2<br>
+
+Documentation on how to can be found in [Install Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
 
 Most of the commands are executed from the command-line. iTerm2 provides an easy to use interface on macOS. To download iTerm2 and instructions for installation steps go to: [iTerm2 Home page](https://www.iterm2.com/index.html)
 
