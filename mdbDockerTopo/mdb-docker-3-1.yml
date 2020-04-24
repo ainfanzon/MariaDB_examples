@@ -52,12 +52,20 @@ services:
     maxscale:
         image: mdbmxscl:latest
         privileged: true
+        cap_add:
+            - SYS_ADMIN
+        security_opt:
+            - seccomp:unconfined
+        tmpfs:
+            - /run
+            - /run/lock
+        volumes:
+            - /Users/Shared:/mdb
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
         depends_on:
             - master
             - slave1
             - slave2
-        volumes:
-            - /Users/Shared:/mdb
         hostname: mdbmxscl
         container_name: mdbmxscl
         networks:
@@ -72,4 +80,5 @@ networks:
         ipam:
             config:
                 - subnet: 172.20.0.0/16
-                  ip_range: 172.28.5.0/24
+                  ip_range: 172.20.5.0/24
+                  gateway: 172.20.5.254
