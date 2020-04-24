@@ -1,0 +1,34 @@
+
+COMMANDS
+========
+# ON THE MARIADB SERVER
+
+ SHOW VARIABLES LIKE 'sql_mode%'\G
+
+ \! cat /mdb/mdbtx/plsql/cr_pkg.sql
+
+# ON THE CLIENT TOOL SERVER
+
+ mysql -h mdbsrv -u mdb -pletmein dbsample
+
+ SOURCE /mdb/mdbtx/plsql/cr_pkg.sql 
+
+ SET sql_mode=ORACLE;
+ SHOW VARIABLES LIKE 'sql_mode%'\G
+
+ SOURCE /mdb/mdbtx/plsql/cr_pkg.sql
+
+ SELECT * FROM emp;
+
+ SELECT employee_tools.getSalary(7934);
+
+ CALL employee_tools.hire(9999,'ALEX','MANAGER',7902,'1982-01-23 00:00:00',4000,500,10);
+ SELECT * FROM employee_log;
+
+ SELECT * FROM emp;
+
+
+
+
+
+
