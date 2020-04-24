@@ -16,6 +16,15 @@
 
 These is a collection of Docker environments to test MariaDB solutions and tools.
 
+< $INSTALL_DIR > -+
+                  +- docker_files
+                  +- maxscl -+
+                  |          +- failover
+                  +- mdbax
+                  +- mdbDockerTopo
+                  +- mdbtx
+                  +- scripts
+
 ## Getting Started 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing. 
@@ -28,8 +37,8 @@ This project was originally created in the following environment.
 
 > macOS Catalina: 10.15.2<br>
 > Docker Engine: 19.03.5<br>
->Docker Compose: 1.24.1<br>
->Docker Machine: 0.16.2<br>
+> Docker Compose: 1.24.1<br>
+> Docker Machine: 0.16.2<br>
 
 Documentation on how to can be found in [Install Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
 
@@ -39,4 +48,14 @@ Some Mac automation scripting code is used. See [About Mac Scripting](https://de
 
 ## Installation Process
 
-1. Build the docker images - The README.md inside the docker_images explains how to create the docker images
+1. Create a directory < $INSTALL_DIR>. Download the project and create the directory tree described above. 
+   IMPORTANT: Make sure this directory is shared. This is required to access all the files from the container
+2. Build the docker images - The README.md inside the docker_images explains how to create the docker images.
+3. Execute the democtl zsh script to launch the solution you want to test. Make sure the script is executable. The syntax is
+  
+   $ ./democtl -s <solution> -d <feature to test> -a <action>
+  
+     -s <solution>.         Is the directory name that holds the solution. The available solutions are maxscl, mdbax or mdbtx
+     -d <feature to test>.  Is the directory name that holds the test script. For example failover, etc.
+     -a <action>.           Posible actions are start|stop|reset
+
