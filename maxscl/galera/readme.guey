@@ -1,0 +1,157 @@
+1) START DEMO  2 windows for Maxscale and 3 for MariaDB Galera servers.
+
++---------+----------+
+|maxscl   |watch -n 1|
++---------+----------+
++-------+-------+-------+
+|mdbsrv1|mdbsrv2|mdbsrv3|
++-------+-------+-------+
+
+TALKING POINTS (MariaDB Synchronous Replication):
+
+Going top to bottom and left to right we have:
+
+1) On the top left corner, the MaxScale server
+2) To the right a window executing every second the MaxScale list servers command. We can see all 3  masters. All of them are synchronized and running. 
+Explain Master/Slave State later during the presentation
+3) At the bottom we have three database servers. All of them are executing the command line sql interface.
+
+First step is to test replication is working properly. To do that let’s show all the databases in this installation.
+
+COMMANDS:
+
+cd /Users/Shared
+./democtl -s maxscl -d galera -a [start | stop | reset ]
+
+===============================================================================
+ON ANY GALERA NODE
+2) SHOW REPLICATION IS WORKING
+
+TALKING POINTS:
++ Correlate IPs to list servers output
++ All servers have the same schemas.
++ Show the cluster size and cluster plugin
++ create a database to validate the synchronous replication is working
++ The watch command shows the all the servers are in Synch.
+
+COMMANDS:
+=========
+
+# ON THE MAIN SERVER 
+ system hostname -I
+ SHOW GLOBAL STATUS LIKE 'wsrep_cluster_%';
+
+# OPTIONALLY to get further details about the cluster
+ SELECT * FROM INFORMATION_SCHEMA.WSREP_MEMBERSHIP;
+
+# ON ALL THE CLUSTER NODES
+
+ SHOW DATABASES;
+
+# ON THE PRIMARY NODE
+
+ CREATE DATABASE trashme;
+
+# ON ALL SERVERS
+
+ SHOW DATABASES;
+
+===============================================================================
+ON THE MAXSCALE SERVER
+3) MAXSCALE CONFIGURATION AND ADMINISTRATION COMMANDS
+
+TALKING POINTS:
+
++ Review the configurations settings in the MaxScale
+  Config file highlights: servers; Monitor; Service Def; listeners
+top screen restart maxscale
++ Show active services
+
+COMMANDS:
+=========
+
+# ON THE MaxScale SERVER
+
+ cat /etc/maxscale.cnf
+
+ systemctl restart maxscale
+
+ maxctrl list services
+ maxctrl list servers
+
+===============================================================================
+4) CLIENT APP:
+
+Talking points:
+  + Identify the primary server and maxscale server IP addresis
+  + read-write-split - first field indicates where the read came from;
+  + secondary server is promoted to Master
+  + the connection fails and cannot recover
+
+Identify the primary server and exit mysql
+
+COMMANDS:
+=========
+
+# ON THE MAXSCALE SERVER
+
+ clear ; cat /mdb/maxscl/galera/loop.sh
+ hostname -I
+
+ clear ; /mdb/maxscl/galera/loop.sh
+
+# On the MariaDB Primary server
+
+ SHUTDOWN;
+
+# Restart server
+
+ system systemctl start mariadb
+
+===============================================================================
+6) CAUSAL CONSISTENCY AND TRANSACTION REPLAY
+
+TALKING POINTS:
+
+COMMANDS:
+=========
+
+# ON THE MAXSCALE SERVER
+Uncomment causal_reads and transaction_replay
+
+ vi /etc/maxscale.cnf
+
+ systemctl restart maxscale
+
+# ON EACH SERVER
+
+ SET SESSION wsrep_sync_wait=1;
+
+# Identify the new master and re-execute the loop script
+
+ clear ; /mdb/maxscl/galera/loop.sh
+
+# On the MariaDB Primary server
+
+ SHUTDOWN;
+
+STOP STOP STOP STOP
+
+Lab Exercise 3-1: Perform a State Snapshot Transfer (SST)
+
+1. On Node 3, exit the MariaDB server and then stop MariaDB
+
+
+2. On Node 3, navigate to the data directory and delete all of its contents. An empty data directory will force an SST transfer when the node rejoins the cluster.
+
+[root@mdb_node3 /]# cd /var/lib/mysql
+[root@mdb_node3 /]# rm ‐rf *
+
+3. Open a second terminal window to the server of Node 3, and start journalctl for MariaDB in follow mode with the -f option. This will show only the most recent journal entries, and continuously print new entries as they are appended to the journal.
+
+[root@mdb_node3 /]# journalctl ‐umariadb ‐f ‐xe
+
+4. On the first terminal window to the server of Node 3, restart MariaDB. Monitor the journal log to see what information is written in the second terminal window.
+
+[root@mdb_node3 /]# systemctl start mariadb
+

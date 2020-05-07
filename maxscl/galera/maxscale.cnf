@@ -1,0 +1,82 @@
+# MaxScale documentation:
+# https://mariadb.com/kb/en/mariadb-enterprise/mariadb-maxscale-23/
+
+# Global parameters
+#
+# Complete list of configuration options:
+# https://mariadb.com/kb/en/mariadb-maxscale-23-mariadb-maxscale-configuration-usage-scenarios/
+
+[maxscale]
+threads=1
+
+# Server definitions
+#
+# Set the address of the server to the network
+# address of a MariaDB server.
+#
+[server1]
+type=server
+address=172.20.0.2
+port=3306
+priotity=1
+protocol=MySQLBackend
+
+[server2]
+type=server
+address=172.20.0.3
+port=3306
+priotity=2
+protocol=MySQLBackend
+
+[server3]
+type=server
+address=172.20.0.4
+port=3306
+priotity=3
+protocol=MySQLBackend
+
+# Monitor for the servers
+#
+# This will keep MaxScale aware of the state of the servers.
+# MariaDB Monitor documentation:
+# https://mariadb.com/kb/en/mariadb-maxscale-23-mariadb-monitor/
+#
+[Galera-Monitor]
+type=monitor
+module=galeramon
+servers=server1,server2,server3
+user=maxuser
+password=letmein
+monitor_interval=1000
+
+# Service definitions
+#
+# Service Definition for a read-only service and
+# a read/write splitting service.
+#
+# ReadConnRoute documentation:
+# https://mariadb.com/kb/en/mariadb-maxscale-23-readconnroute/
+
+# ReadWriteSplit documentation:
+# https://mariadb.com/kb/en/mariadb-maxscale-23-readwritesplit/
+
+[Galera-Service]
+type=service
+router=readwritesplit
+servers=server1,server2,server3
+user=maxuser
+password=letmein
+#causal_reads=true
+#transaction_replay=true
+
+# Listener definitions for the services
+#
+# These listeners represent the ports the
+# services will listen on.
+#
+
+[Galera-Listener]
+type=listener
+service=Galera-Service
+protocol=MySQLClient
+port=3306
