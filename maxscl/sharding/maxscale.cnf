@@ -1,0 +1,73 @@
+# MaxScale documentation:
+# https://mariadb.com/kb/en/mariadb-enterprise/mariadb-maxscale-23/
+
+# Global parameters
+#
+# Complete list of configuration options:
+# https://mariadb.com/kb/en/mariadb-maxscale-23-mariadb-maxscale-configuration-usage-scenarios/
+
+[maxscale]
+threads=auto
+
+# Server definitions
+#
+# Set the address of the server to the network
+# address of a MariaDB server.
+#
+
+[mdbsrv1]
+type=server
+address=172.20.0.2
+port=3306
+protocol=MariaDBBackend
+
+[mdbsrv2]
+type=server
+address=172.20.0.3
+port=3306
+protocol=MariaDBBackend
+
+[mdbsrv3]
+type=server
+address=172.20.0.4
+port=3306
+protocol=MariaDBBackend
+
+# Monitor for the servers
+#
+# This will keep MaxScale aware of the state of the servers.
+# MariaDB Monitor documentation:
+# https://mariadb.com/kb/en/mariadb-maxscale-23-mariadb-monitor/
+
+[MariaDB-Monitor]
+type=monitor
+module=mariadbmon
+servers=mdbsrv1,mdbsrv2,mdbsrv3
+user=mdb
+password=letmein
+monitor_interval=50
+
+# Service definitions
+
+# Service Definition for a sharding service
+#
+[Sharded-Service]
+type=service
+router=schemarouter
+servers=mdbsrv1,mdbsrv2,mdbsrv3
+user=mdb
+password=letmein
+ignore_databases=test
+ignore_tables_regex=^test.
+
+# Listener definitions for the services
+#
+# These listeners represent the ports the
+# services will listen on.
+#
+
+[Sharded-Service-Listener]
+type=listener
+service=Sharded-Service
+protocol=MariaDBClient
+port=4000

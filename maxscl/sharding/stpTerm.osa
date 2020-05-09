@@ -1,0 +1,5 @@
+tell application "iTerm"
+  repeat with aWindow in windows
+    close aWindow
+  end repeat
+end tell

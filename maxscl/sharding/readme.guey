@@ -1,0 +1,177 @@
+1) START DEMO: Start containers
+
+cd /Users/Shared
+./democtl -s maxscl -d sharding -a start
+
+===============================================================================
+2) LAYOUT SETUP: Open 2 windows for Maxscale and 3 for MariaDB servers.
+
++-------+-------+
+|maxscl |mdbsrv1|
+|       +-------+
++-------+mdbsrv2|
+        +-------+
+        |mdbsrv3|
+        +-------+
+
+===============================================================================
+Talking points
+
+On the right hand side of the screen we have the database servers. One for each region. Server #1 for Americas; server #2 for APAC and server #3 for EMEA.
+
+Using the mysql client tool
+
+We can identiy each IP addres and databases.
+
+Each database has a different name, but the schema is the same for all of them, meaning all of them have the same tables. Only the data
+
+COMMANDS
+========
+# On each server:
+ system hostname -I
+ SHOW DATABASES;
+
+# ON MDBSRV1
+ SHOW FULL TABLES IN acme_amer;
+ SELECT * FROM acme_amer.emp;
+
+# ON MDBSRV2
+ SHOW FULL TABLES IN acme_apac;
+ SELECT * FROM acme_apac.emp;
+
+# ON MDBSRV3
+ SHOW FULL TABLES IN acme_emea;
+ SELECT * FROM acme_emea.emp;
+
+===============================================================================
+3) START MAXSCALE SESSIONS
+
+We are now connecting to the Maxscale server. First let's review some of the key confuguration parameters in the maxscale configuration file. 
+
+# Config file highlights: servers; Monitor; Service Def; listeners
+
++ All database servers to be used in the deployment are defined in the [servers] section.
++ There are a number of monitors that you can configure to check the status of a service. Here we have a list of servers to monitor using the mdb user id
++ The service has to be also defined in the maxscale configuration file. In this case we have the router parameter defined as schemarouter. 
++ Finally, define the listening ports for the service and start the maxscale server
+
+COMMANDS
+========
+
+# ON THE MAXSCALE SERVER:
+  clear ; cat /etc/maxscale.cnf
+
+  systemctl start maxscale
+  maxctrl list servers
+  maxctrl list services
+
+===============================================================================
+4) Check how database schemas map to servers
+
+TALKING POINTS
+Now using the mysql command line client tool we are connecting to Maxscale on the 172.20.0.5 host on port 4000
+
++ check how databases and tables map to servers, execute the special query SHOW SHARDS. The query does not support any modifiers such as LIKE  
++ We can see our three databases, namely acme_amer, acme_apac, acme_emea. Each one with four base tables: bonus, dept, emp and salgrade. We can also see the database test.
++ It is empty though because we have not created any tables. We will do that in a minute but first we will execute a couple of queries to validate the schema router is working.
++ The first two queries are joining the emp and dept tables by departmen number. The @@hostname system variable has been added to identify the data origin,
++We can see our three databases, namely acme_amer, acme_apac, acme_emea. Each one with four base tables: bonus, dept, emp and salgrade. We can also see the database test.
++ It is empty though because we have not created any tables. We will do that in a minute but first we will execute a couple of queries to validate the schema router is working.
+The first two queries are joining the emp and dept tables by departmen number. The @@hostname system variable has been added to identify the data origin,
++ As we can see the data came from the mdbsrv1 server since that server is hosting the America's database.
+
+COMMANDS
+========
+# ON THE MAXSCALE SERVER:
+
+ mariadb --user=mdb --password=letmein --host mdbmxscl -P 4000
+
+ SELECT a.ename, b.dname, b.loc, @@hostname
+ FROM acme_amer.emp a JOIN acme_amer.dept b 
+ WHERE a.deptno=b.deptno;
+
+ SELECT a.ename, b.dname, b.loc, @@hostname
+ FROM acme_emea.emp a JOIN acme_emea.dept b
+ WHERE a.deptno=b.deptno;
+
+NOTE: By changing the database to acme_emea we can see the data is now coming from the mdbsrv2 server.
+===============================================================================
+
+5) If connection is initialized without a default database, the router selects a default server without a database is routed to the first available server.
+
+COMMANDS
+========
+# ON THE MAXSCALE SERVER:
+
+ SELECT SUBSTRING_INDEX(USER(), '@', -1) AS user
+      , @@hostname AS hostname
+      , @@port AS port
+      , DATABASE() AS current_database;
+
+# By selecting a database with the USE statement and re-executing the previous query:
+
+ USE acme_apac;
+ SELECT SUBSTRING_INDEX(USER()
+      , '@', -1) AS user
+      , @@hostname AS hostname
+      , @@port AS port
+      , DATABASE() AS current_database;
+
+we can now see the server name corresponds to the location where the database shard was created.
+===============================================================================
+
+6) Insert a record the router will place it in the right location.
+
+COMMANDS 
+========
+# ON THE MAXSCALE SERVER:
+
+ INSERT INTO acme_emea.emp (empno, ename, job, mgr, hiredate, sal, comm, deptno) VALUES (9696,'ALEX','ANALYST',9782,STR_TO_DATE('3-12-1981','%d-%m-%Y'),3000,NULL,20);
+
+# That record is inserted only in the emea database server.
+
+ SELECT * FROM acme_emea.emp WHERE empno=9696; 
+
+# but not the others
+
+ SELECT * FROM acme_amer.emp WHERE empno=9696;
+ SELECT * FROM acme_apac.emp WHERE empno=9696;
+ EXIT;
+
+===============================================================================
+
+7) Same schema different tables
+
+Finally, Let's come back to the TEST database.  If the same database exists on multiple servers, but the database contains different tables in each server, SchemaRouter
+is capable of routing queries to the right server, depending on which table is being addressed.
+
+As an example, the test database exists on servers mdbsrv1 and mdbsrv2, but the database on mdbsrv1 contains the table tbl1 and on mdbsrv2 contains the table tbl2.
+
+COMMANDS
+========
+
+# ON MDBSRV1
+
+ USE test;
+ CREATE TABLE tbl1 (a1 INTEGER, a2 VARCHAR(20));
+ INSERT INTO tbl1 (a1, a2) VALUES (1, 'UNO');
+
+
+# ON MDBSRV3
+
+ USE test;
+ CREATE TABLE tbl2 (a1 INTEGER, a2 VARCHAR(20));
+ INSERT INTO tbl2 (a1, a2) VALUES (1, 'EINS');
+
+
+# On the MaxScale server
+The following queries:
+
+ mariadb --user=mdb --password=letmein --host mdbmxscl -P 4000
+
+ USE test;
+ SELECT a1, a2, @@hostname FROM test.tbl1;
+ SELECT a1, a2, @@hostname FROM test.tbl2;
+
+will be routed to server1 and the query SELECT * FROM test.tbl2 will be routed to server2. Even though the schema is the same.
+As in the all the queries, the table names must be qualified with the database names for table-level sharding to work.
