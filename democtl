@@ -70,6 +70,12 @@ StartDemo(){
             if [ "${demo}" = 'galera' ]; then
               docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-3-1.yml up -d
             fi
+            if [ "${demo}" = 'filters' ]; then
+              docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-3-1.yml up -d
+            fi
+            if [ "${demo}" = 'binlog' ]; then
+              docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-4-1.yml up -d
+            fi
  	    ;;
      mdbx3) docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-1-1-1.yml up -d
  	    ;;
@@ -100,6 +106,7 @@ StartDemo(){
 # Function stop docker containers
 ###############################################################################
 StopDemo(){
+  declare -a srvArray=("mdbsrv1" "mdbsrv2" "mdbsrv3" )
   echo -e "I need to stop the demo now!"
 
   while read -q "YN?Is that okay [y/n]?" && if [[ ${YN} =~ '[Yy]' ]] ; do
@@ -128,6 +135,12 @@ StopDemo(){
 	      fi 
               if [[ ${demo} = 'galera' ]]; then
                 docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-3-1.yml down
+	      fi 
+              if [[ ${demo} = 'filters' ]]; then
+                docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-3-1.yml down
+	      fi 
+              if [[ ${demo} = 'binlog' ]]; then
+                docker-compose -f ${HOST_HOME_DIR}/${TOPOLOGY_DIR}/mdb-docker-4-1.yml down
 	      fi 
   	      ;;
 	   ?) echo -e "AICA"
@@ -161,23 +174,58 @@ ResetDemo(){
 }
 
 ###############################################################################
+# Function display error message arguments missing
+###############################################################################
+errMsg(){
+    clear
+    echo -e "${RED} $1 \n\n"
+    exit 1
+}
+
+###############################################################################
 # Main Section
 ###############################################################################
-while getopts 'a:s:d:t:' option; do
+
+while getopts 'a:s:d:' option; do
   case ${option} in
     a) action=${OPTARG}
+       aFlag=true
        ;;
     s) solution=${OPTARG}
+       sFlag=true
        ;;
     d) demo=${OPTARG}
+       dFlag=true
        ;;
-    t) topology=${OPTARG}
+    ?) errMsg="SCRIPT USAGE: democtl -a start|stop|reset -s <solution> -d <demo> -t <mdb topology>"
        ;;
-    ?) echo -e "${RED}SCRIPT USAGE: $(basename $0) -a start|stop|reset -s <solution> -d <demo> -t <mdb topology>" >&2
-      exit 1
-      ;;
+  \? ) errMsg "Unknown option: -$OPTARG"
+       ;;
+  :  ) errMsg "Missing option argument for -$OPTARG"
+       ;;
+  *  ) errMsg "Unimplemented option: -$OPTARG"
+       ;;
   esac
 done
+
+if [[ OPTIND == 1 ]]
+then
+    msg="AICA: No options specified! "
+    errMsg $msg
+fi
+
+if [[ ! $aFlag ]]
+then
+    errMsg "AICA: Missing the -a flag in the democtl arguments! "
+fi
+if [[ ! $dFlag ]]
+then
+    errMsg "AICA: Missing the -d flag in the democtl arguments! "
+fi
+if [[ ! $sFlag ]]
+then
+    errMsg "AICA: Missing the -s flag in the democtl arguments! "
+fi
 
 HOST_HOME_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo -e "Host home directory (HOST_HOME_DIR): $HOST_HOME_DIR"
