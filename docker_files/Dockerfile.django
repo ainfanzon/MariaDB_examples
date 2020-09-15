@@ -1,0 +1,41 @@
+FROM centos:7
+
+MAINTAINER Alex Infanzon (ai@mariadb.com)
+
+ENV container docker
+
+RUN yum -y install epel-release && \
+    yum -y update
+RUN yum -y install python-pip \
+    zlib-devel \
+    bzip2 \
+    bzip2-devel \
+    readline-devel \
+    sqlite \
+    sqlite-devel \
+    openssl-devel \
+    xz \
+    xz-devel \
+    libffi-devel \
+    git \
+    MySQL-python \
+    mariadb-devel \
+    wget && \
+    yum clean all
+#    yum -y group install \"Development Tools\" && \
+RUN curl https://pyenv.run | bash
+COPY ./bashrc /root/.bashrc
+RUN exec "$SHELL"
+    
+#RUN pyenv install -v 3.7.2
+#RUN pyenv global 3.7.2
+#RUN pip install --upgrade pip
+#RUN pip install django
+#RUN rm -Rf /lib/systemd/system/anaconda.target.wants/*;
+
+VOLUME [ “/sys/fs/cgroup” ]
+
+CMD ["/usr/sbin/init"]
+
+EXPOSE 8000/tcp
+EXPOSE 3306/tcp
