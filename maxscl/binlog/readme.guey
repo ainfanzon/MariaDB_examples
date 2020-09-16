@@ -1,0 +1,136 @@
+1) START DEMO 2 windows for Maxscale and 3 for MariaDB servers. 1 primary (mdbsrv1) and 2 secondary servers (mdbsrv2, mdbsrv3).
+
++---------+----------+
+|maxscl   |watch -n 1|
++---------+----------+
++-------+-------+-------+-------+
+|mdbsrv1|mdbsrv2|mdbsrv3|mdbsrv4|
++-------+-------+-------+-------+
+
+TALKING POINTS (MariaDB Asynchronous Replication):
+
+Going top to bottom and left to right we have:
+
+1) On the top left corner, the MaxScale server
+2) To the right a window executing every second the MaxScale list servers command. We can see a master and two replicas running. Also, note that the GTID column is blank, meaning no transactions have been replicated.
+3) At the bottom we have three database servers. On the bottom left we have the master server and the two others on the right are asynchronous replicas. All three servers are executing the command line sql interface.
+
+
+COMMANDS:
+==========
+
+ /Users/Shared/democtl -s maxscl -d binlog -a [start | stop ]
+
+===============================================================================
+1) MAXSCALE CONFIGURATION AND ADMINISTRATION COMMANDS
+
+TALKING POINTS:
+
++ Review the configurations settings in the MaxScale 
+  Config file highlights: servers; Monitor; Service Def; listeners
+top screen restart maxscale
++ Show active services
+
+COMMANDS:
+==========
+
+# ON THE MAXSCALE SERVER
+
+ cat /etc/maxscale.cnf           
+
+ systemctl restart maxscale
+ maxctrl list services
+ maxctrl list servers
+
+===============================================================================
+2) Activating the Binlog Server
+
+# ON THE MASTER SERVER
+
+SHOW MASTER STATUS;
+SELECT BINLOG_GTID_POS("master1-bin.000001", );
+
+# ON THE MAXSCALE SERVER
+
+ mariadb -u maxuser -pletmein -h 172.20.0.6 -P 5306
+
+ SET @@global.gtid_slave_pos = '';
+ CHANGE MASTER TO MASTER_HOST = '172.20.0.6', MASTER_USER = 'repuser', MASTER_PASSWORD = 'letmein', MASTER_PORT=5306, MASTER_USE_GTID = slave_pos;
+ START SLAVE;
+
+ maxctrl list services
+ maxctrl list servers
+===============================================================================
+3) Pointing Slaves to the Binlog Server
+
+# ON ALL THE REPLICAS
+
+ SHOW SLAVE STATUS\G
+ STOP SLAVE;
+ CHANGE MASTER TO MASTER_HOST = '172.20.0.6', MASTER_USER = 'repuser', MASTER_PASSWORD = 'letmein', MASTER_PORT=5306, MASTER_USE_GTID = slave_pos;
+ START SLAVE;
+
+ SHOW SLAVE STATUS\G
+
+===============================================================================
+4) SHOW REPLICATION IS WORKING
+
+TALKING POINTS:
++ Correlate IPs to list servers output
++ All servers have the same schemas.
++ create a database to validate the synchronous replication is working
++ The watch command shows the all the servers are in Synch.
+
+COMMANDS:
+=========# ON THE MASTER NODE
+
+ hostname -I
+ SHOW DATABASES;
+ CREATE DATABASE trashme;
+
+# ON ALL THE SERVERS
+
+ SHOW DATABASES;
+
+ SHOW SLAVE HOSTS;
+
+ SHOW PROCESSLIST;
+===============================================================================
+
+# ON THE MAXSCALE SERVER
+
+ clear ; cat /mdb/maxscl/failover/loop.sh
+
+ hostname -I
+ /mdb/maxscl/failover/loop.sh
+
+# ON THE MariaDB PRIMARY SERVER
+
+ SHUTDOWN;
+
+===============================================================================
+6) CAUSAL CONSISTENCY AND TRANSACTION REPLAY
+
+TALKING POINTS:
+Uncomment causal_reads and transaction_replay
+
+COMMANDS:
+=========
+
+# ON THE SERVER THAT IS DOWN
+
+ system systemctl start mariadb
+
+# ON THE MaxScale SERVER 
+
+ vi /etc/maxscale.cnf
+
+ systemctl restart maxscale
+
+# IDENTIFY THE NEW MASTER AND RE-EXECUTE THE LOOP SCRIPT
+
+ clear ; /mdb/maxscl/failover/loop.sh
+
+ SHUTDOWN;
+
+===============================================================================
